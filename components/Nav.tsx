@@ -7,12 +7,12 @@ import { UMBRA } from "@/app/content";
 import { useSmoothScroll } from "./SmoothScrollProvider";
 import styles from "./shell.module.css";
 
-/** The nav links. Lore/Roadmap are home-page anchors written absolutely so they
- *  resolve from any route; Tokenomics is its own page. */
+/** The nav links. Lore is a home-page anchor written absolutely so it resolves
+ *  from any route; Tokenomics and Roadmap are their own pages. */
 const LINKS = [
   { label: "Lore", href: "/#lore" },
   { label: "Tokenomics", href: "/tokenomics" },
-  { label: "Roadmap", href: "/#roadmap" },
+  { label: "Roadmap", href: "/roadmap" },
 ];
 
 /** Hidden on scroll-down, revealed on scroll-up (and always near the top).

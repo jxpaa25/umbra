@@ -34,16 +34,62 @@ export const UMBRA = {
     ],
   },
 
-  /** roadmap = the four shadows of an eclipse */
+  /**
+   * roadmap = the four shadows of an eclipse.
+   * id/name/line drive the home-page teaser (RoadmapTeaser) and the /tokens page.
+   * status/label/milestones drive the standalone /roadmap timeline. status is one
+   * of "complete" | "active" | "planned"; milestones carry their own done flag so
+   * an active phase can show partial progress. No hard dates by design.
+   */
   phases: [
-    { id: "01", name: "Umbra", line: "It wakes." },
-    { id: "02", name: "Penumbra", line: "The shadow reaches the edges." },
+    {
+      id: "01",
+      name: "Umbra",
+      line: "It wakes.",
+      status: "complete",
+      label: "Live now",
+      milestones: [
+        { text: "Fair launch on pump.fun", done: true },
+        { text: "Liquidity burned, contract renounced", done: true },
+        { text: "First shadows gather past a thousand holders", done: true },
+      ],
+    },
+    {
+      id: "02",
+      name: "Penumbra",
+      line: "The shadow reaches the edges.",
+      status: "active",
+      label: "In progress",
+      milestones: [
+        { text: "DexScreener paid and trending", done: true },
+        { text: "Nightly lore drops and community raids", done: false },
+        { text: "Listed on the first price aggregators", done: false },
+      ],
+    },
     {
       id: "03",
       name: "Totality",
       line: "Everything lines up, and the eye opens.",
+      status: "planned",
+      label: "Next",
+      milestones: [
+        { text: "First centralized exchange listing", done: false },
+        { text: "The Eye opens: live holder dashboard", done: false },
+        { text: "Alliances with kindred communities", done: false },
+      ],
     },
-    { id: "04", name: "Corona", line: "The light returns, changed." },
+    {
+      id: "04",
+      name: "Corona",
+      line: "The light returns, changed.",
+      status: "planned",
+      label: "On the horizon",
+      milestones: [
+        { text: "Merch and an in-person eclipse gathering", done: false },
+        { text: "A creator fund for shadow art", done: false },
+        { text: "The next eclipse begins", done: false },
+      ],
+    },
   ],
 
   tokenomics: {

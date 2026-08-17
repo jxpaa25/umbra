@@ -1,0 +1,348 @@
+/* =============================================================================
+   $UMBRA — /roadmap page
+   Self-contained module in the site's per-folder convention. Reads all tokens
+   from the enclosing .umbra-root (umbra.css); never redefines the palette.
+   One theme (void), one accent (ember/corona), one radius scale (sharp).
+   ========================================================================== */
+
+/* ---- Shared reveal (staggered via --i) — same shape as tokenomics --------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.inView .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Intro ---------------------------------------------------------------- */
+.introSection {
+  position: relative;
+  padding-block: var(--section) var(--space-12);
+}
+.introTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  color: var(--text);
+  max-width: 14ch;
+  margin-top: var(--space-6);
+}
+.introSub {
+  color: var(--text-dim);
+  font-size: var(--text-lg);
+  line-height: var(--leading);
+  max-width: 52ch;
+  margin-top: var(--space-4);
+}
+
+/* ---- Timeline scaffold ---------------------------------------------------- */
+.timeline {
+  position: relative;
+  padding-block: var(--space-8) var(--space-16);
+}
+.track {
+  --rail-w: 100px;
+  position: relative;
+}
+
+/* the spine: dim base rail + ember fill that scrubs on scroll */
+.spine {
+  position: absolute;
+  top: var(--space-12);
+  bottom: var(--space-12);
+  left: calc(var(--rail-w) / 2);
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--line-2);
+  overflow: hidden;
+  z-index: 0;
+}
+.spineFill {
+  position: absolute;
+  inset: 0;
+  transform-origin: top center;
+  transform: scaleY(0);
+  background: linear-gradient(
+    to bottom,
+    var(--ember-deep),
+    var(--ember) 40%,
+    var(--corona)
+  );
+  box-shadow: 0 0 12px rgb(var(--ember-rgb) / 0.4);
+}
+
+/* ---- Phase row ------------------------------------------------------------ */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  gap: var(--space-8);
+  padding-block: var(--space-12);
+  /* reveal, same feel as Manifesto's line reveal */
+  opacity: 0;
+  transform: translateY(26px);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out),
+    filter 0.8s var(--ease-out);
+}
+.rowIn {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.rail {
+  position: relative;
+}
+.node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.node[data-status="complete"] {
+  box-shadow:
+    inset 0 0 0 1px var(--ember-deep),
+    var(--glow-ember);
+}
+.node[data-status="active"] {
+  box-shadow:
+    inset 0 0 0 1px var(--ember),
+    0 0 28px rgb(var(--corona-rgb) / 0.28);
+}
+
+/* ---- Eclipse glyph (SVG) --------------------------------------------------- */
+.glyph {
+  width: 62px;
+  height: 62px;
+  display: block;
+  overflow: visible;
+}
+.glyphCorona {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glyphTotal .glyphCorona {
+    animation: coronaBreathe 6s var(--ease-inout) infinite;
+  }
+}
+@keyframes coronaBreathe {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+/* ---- Phase content -------------------------------------------------------- */
+.body {
+  min-width: 0;
+  padding-top: var(--space-2);
+}
+.phaseHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+}
+.pid {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-faint);
+}
+.pname {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: var(--text-2xl);
+  line-height: 1.05;
+  color: var(--text);
+}
+.statusPill {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.statusPill[data-status="complete"] {
+  color: var(--accent-strong);
+  border-color: var(--ember-deep);
+}
+.statusPill[data-status="active"] {
+  color: var(--accent);
+  border-color: var(--ember-deep);
+  box-shadow: var(--glow-ember);
+}
+.statusPill[data-status="planned"] {
+  color: var(--text-faint);
+}
+.pline {
+  margin-top: var(--space-4);
+  max-width: 46ch;
+  font-size: var(--text-lg);
+  line-height: var(--leading);
+  color: var(--text-dim);
+}
+
+/* ---- Milestones ----------------------------------------------------------- */
+.milestones {
+  list-style: none;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 56ch;
+}
+.milestone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+}
+.mNode {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+  border: 1px solid var(--fog-dim);
+  background: transparent;
+  transition:
+    background 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
+}
+.milestone[data-done="true"] .mNode {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgb(var(--ember-rgb) / 0.5);
+}
+.mText {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--text-dim);
+}
+.milestone[data-done="true"] .mText {
+  color: var(--text);
+}
+.mState {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.milestone[data-done="true"] .mState {
+  color: var(--ember-deep);
+}
+
+/* ---- Closing -------------------------------------------------------------- */
+.closing {
+  padding-block: var(--space-16) var(--section);
+  text-align: center;
+}
+.closingLine {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  font-size: var(--text-2xl);
+  max-width: 22ch;
+  margin-inline: auto;
+  color: var(--text);
+}
+.closingCta {
+  display: inline-block;
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text);
+  padding: 14px 30px;
+  border: 1px solid var(--ember-deep);
+  border-radius: var(--radius);
+  transition:
+    box-shadow 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out),
+    transform 0.2s var(--ease-out);
+}
+.closingCta:hover {
+  border-color: var(--ember);
+  box-shadow: var(--glow-ember);
+}
+.closingCta:active {
+  transform: translateY(1px);
+}
+
+/* ---- Responsive collapse -------------------------------------------------- */
+@media (max-width: 768px) {
+  .track {
+    --rail-w: 60px;
+  }
+  .node {
+    width: 52px;
+    height: 52px;
+  }
+  .glyph {
+    width: 38px;
+    height: 38px;
+  }
+  .row {
+    gap: var(--space-4);
+    padding-block: var(--space-8);
+  }
+  .pname {
+    font-size: var(--text-xl);
+  }
+  .pline {
+    font-size: var(--text-base);
+  }
+  .mState {
+    display: none; /* status is carried by the node fill on narrow screens */
+  }
+}
+
+/* ---- Reduced motion ------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .row {
+    transform: none;
+    filter: none;
+    transition-duration: 0.35s;
+    transition-delay: 0s;
+  }
+  .spineFill {
+    transform: scaleY(1);
+  }
+}

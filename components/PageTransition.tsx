@@ -33,7 +33,7 @@ import styles from "./page-transition.module.css";
  */
 
 // Extend as more pages ship. Unknown pathnames sort after known ones.
-const ROUTE_ORDER = ["/", "/tokenomics"] as const;
+const ROUTE_ORDER = ["/", "/tokenomics", "/roadmap"] as const;
 function routeIndex(pathname: string) {
   const i = ROUTE_ORDER.indexOf(pathname as (typeof ROUTE_ORDER)[number]);
   return i === -1 ? ROUTE_ORDER.length : i;
