@@ -1,0 +1,20 @@
+/* The EXITING pane only — lifted out of flow so it can slide away without
+   pushing the incoming (in-flow) page down, and clipped to the viewport. */
+.pane {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+/* The present / incoming page — stays in normal document flow so document
+   height and every scroll measurement stay correct. position:relative (not
+   static) so the inline z-index from the slide variants applies, keeping the
+   incoming page above the exiting fixed pane. */
+.paneSettled {
+  position: relative;
+}
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+}

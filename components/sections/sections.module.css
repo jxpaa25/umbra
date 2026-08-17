@@ -1,0 +1,478 @@
+/* =============================================================================
+   $UMBRA — home sections (atmospheric / cinematic rework)
+   No cards; sparse type over the shared cosmic background; scroll reveals.
+   ========================================================================== */
+
+.section {
+  position: relative;
+  padding-block: var(--section);
+}
+
+/* generic scroll reveal (staggered via --i) */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.inView .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* small section marker: mono label + optional link */
+.marker {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.markerLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.markerLink {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    transform 140ms var(--ease-out);
+}
+.markerLink:hover {
+  opacity: 0.72;
+}
+.markerLink:active {
+  transform: scale(0.97);
+}
+
+/* ---- Manifesto ----------------------------------------------------------- */
+.manifesto {
+  padding-block: calc(var(--section) * 1.1);
+}
+.manifestoLines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 24ch;
+}
+.manifestoLine {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--text-dim);
+  text-wrap: balance;
+}
+.manifestoEmph {
+  color: var(--text);
+}
+/* line-by-line scroll reveal (dim → bright, subtle blur-in per Emil) */
+.lineReveal {
+  opacity: 0.1;
+  transform: translateY(16px);
+  filter: blur(3px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out),
+    filter 0.7s var(--ease-out);
+}
+.lineIn {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ---- Reduced motion: keep gentle fades, drop movement & looping ---------- */
+@media (prefers-reduced-motion: reduce) {
+  /* scroll reveals fade in place — no slide, no blur-in */
+  .reveal,
+  .lineReveal {
+    transform: none;
+    filter: none;
+    transition-duration: 0.35s;
+    transition-delay: 0s;
+  }
+}
+
+/* ---- Tokenomics: big numbers, one per screen ----------------------------- */
+.tokFigure {
+  min-height: 74vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding-block: var(--space-8);
+}
+.tokIndex {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-faint);
+  margin-bottom: var(--space-6);
+}
+.tokValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  font-size: clamp(3rem, 13vw, 11rem);
+  color: var(--text);
+  text-wrap: balance;
+}
+.tokLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: var(--space-6);
+}
+.tokEnd {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-8);
+}
+
+/* ---- Pinned depth stage: shared by Roadmap and Tokenomics ---------------- */
+/* Static base (SSR / no-JS / reduced-motion / mobile): a plain legible list
+   — .stageHeader / .stage / .stageFooter just stack in normal flow. The
+   JS-activated pinned 3D stage lives under [data-mode="active"] further down,
+   where the header/footer are pulled out of flow and pinned to the top/bottom
+   of the same box that GSAP pins to the viewport (see usePinnedDepthStage),
+   so they stay on screen for the whole scrubbed pass. */
+.stage {
+  position: relative;
+}
+.stageFooter {
+  margin-top: var(--space-8);
+}
+.spine {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  max-width: 680px;
+  margin-inline: auto;
+  margin-top: var(--space-16);
+  padding-inline: var(--space-6);
+}
+.phase {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+.pid {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-faint);
+}
+.pname {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--text-3xl);
+  color: var(--text);
+}
+.pstatus {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.pline {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: var(--text-base);
+}
+
+/* --- ACTIVE: the pinned 3D depth stage (JS on, motion allowed) ------------ */
+.stage[data-mode="active"] {
+  min-height: 100vh;
+  margin-top: 0;
+  overflow: hidden;
+  perspective: 900px; /* stronger foreshortening → dramatic deep-space zoom */
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+/* pulled out of the (single-item) centring grid and pinned to the top/bottom
+   edge of the box GSAP pins to the viewport — stays on screen the whole pass */
+.stage[data-mode="active"] .stageHeader,
+.stage[data-mode="active"] .stageFooter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  margin: 0;
+}
+.stage[data-mode="active"] .stageHeader {
+  top: 0;
+  /* clears the fixed site nav (~84px tall) so the pinned label isn't hidden
+     behind it for the whole scrubbed pass */
+  padding-top: calc(var(--space-16) + var(--space-8));
+}
+.stage[data-mode="active"] .stageFooter {
+  bottom: 0;
+  padding-bottom: var(--space-8);
+}
+.stage[data-mode="active"] .spine {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  height: 0; /* plates are absolutely centred and stacked in Z by GSAP */
+  margin-top: 0;
+  gap: 0;
+  padding: 0;
+  overflow: visible;
+  transform-style: preserve-3d;
+}
+.stage[data-mode="active"] .stagePlate {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(88vw, 560px);
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+}
+.stage[data-mode="active"] .pname {
+  font-size: var(--text-hero);
+}
+.stage[data-mode="active"] .tokFigure {
+  min-height: 0;
+  display: block;
+  padding-block: 0;
+  /* values like "Renounced" / "0 / 0" are far wider than the 560px roadmap
+     plate; track the viewport (not a fixed cap) so the widest word always has
+     margin on both sides and stays centred */
+  width: 92vw;
+  text-align: center;
+}
+.stage[data-mode="active"] .tokValue {
+  white-space: nowrap; /* keep "0 / 0" on one line */
+}
+
+/* ---- How to buy: vertical steps on the RIGHT (moon travels the left half) -- */
+.steps {
+  display: flex;
+  flex-direction: column;
+  width: min(48%, 460px);
+  margin-inline-start: auto; /* push the column to the right */
+  margin-top: var(--space-16);
+}
+.step {
+  padding: var(--space-8) 0;
+}
+.step:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.stepNum {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  color: var(--accent);
+  line-height: 1;
+}
+.stepTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--text-lg);
+  color: var(--text);
+  margin-top: var(--space-6);
+}
+.stepBody {
+  color: var(--text-dim);
+  font-size: var(--text-base);
+  margin-top: var(--space-3);
+  max-width: 32ch;
+}
+/* The steps hug the right half only to leave room for the moon on the LEFT.
+   On mobile the moon is centred (behind), so give the steps the full width. */
+@media (max-width: 900px) {
+  .steps {
+    width: 100%;
+    margin-inline-start: 0;
+  }
+  .step {
+    padding: var(--space-6) 0;
+  }
+}
+
+/* ---- Community / footer: CTA finale -------------------------------------- */
+/* Last section: trim the big bottom rhythm so the disclaimer is fully on-screen
+   at the very end of the scroll (the shared --section adds 300px each side). */
+.footerEnd {
+  padding-bottom: var(--space-12);
+}
+.finale {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-8);
+}
+.finaleWord {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  font-size: clamp(2.6rem, 13vw, 10rem);
+  line-height: 1;
+  color: var(--text);
+  text-indent: var(--tracking-widest);
+}
+.finaleWord b {
+  font-weight: inherit;
+  color: var(--corona);
+}
+.finaleLine {
+  color: var(--text-dim);
+  font-size: var(--text-lg);
+  margin-top: calc(var(--space-6) * -1);
+}
+.finaleBuy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--corona);
+  text-decoration: none;
+  padding: var(--space-4) var(--space-12);
+  border: 1px solid var(--ember-deep);
+  border-radius: var(--radius);
+  background: rgb(var(--ember-rgb) / 0.06);
+  transition:
+    background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform 140ms var(--ease-out);
+}
+.finaleBuy:hover {
+  background: rgb(var(--ember-rgb) / 0.14);
+  box-shadow: var(--glow-ember);
+}
+.finaleBuy:active {
+  transform: scale(0.97);
+}
+.finaleBuy .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--corona);
+  box-shadow: var(--glow-corona);
+}
+.caButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: min(92vw, 560px);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgb(4 3 2 / 0.5);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    transform 140ms var(--ease-out);
+}
+.caButton:hover {
+  border-color: var(--ember-deep);
+}
+.caButton:active {
+  transform: scale(0.98);
+}
+.caText {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  flex: 1;
+  min-width: 0; /* allow the mono address to ellipsize inside the flex button */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.caCopy {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  flex: none;
+}
+.socials {
+  display: flex;
+  gap: var(--space-8);
+}
+.socials a {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.socials a:hover {
+  color: var(--accent-strong);
+}
+.disclaimer {
+  max-width: 52ch;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  line-height: 1.6;
+  padding-bottom: var(--space-6);
+}
+
+/* ---- Narrow screens (phones) --------------------------------------------- */
+@media (max-width: 520px) {
+  /* long word-values ("Renounced", "Burned") would overflow at 13vw */
+  .tokValue {
+    font-size: clamp(2.4rem, 11vw, 4rem);
+  }
+}
+@media (max-width: 480px) {
+  /* stack the label / link|caption so the two nowrap ends can't collide */
+  .marker {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .markerLink {
+    white-space: normal;
+  }
+  /* wide tracking + indent pushed the finale wordmark past the edge */
+  .finaleWord {
+    letter-spacing: var(--tracking-wide);
+    text-indent: 0;
+  }
+}
+@media (max-width: 360px) {
+  .finaleWord {
+    letter-spacing: var(--tracking-normal);
+  }
+}

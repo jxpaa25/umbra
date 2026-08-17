@@ -1,0 +1,237 @@
+/* =============================================================================
+   $UMBRA — /tokenomics page
+   Self-contained module: same visual language as sections.module.css (marker,
+   reveal, ember/corona accents) but its own primitives, per the site's
+   per-folder CSS-module convention.
+   ========================================================================== */
+
+.section {
+  position: relative;
+  padding-block: var(--section);
+}
+
+/* generic scroll reveal (staggered via --i) — same shape as sections.module.css */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.inView .reveal {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transform: none;
+    transition-duration: 0.35s;
+    transition-delay: 0s;
+  }
+}
+
+/* ---- Intro ---------------------------------------------------------------- */
+.introTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  color: var(--text);
+  max-width: 16ch;
+  margin-top: var(--space-6);
+}
+.introSub {
+  color: var(--text-dim);
+  font-size: var(--text-lg);
+  max-width: 48ch;
+  margin-top: var(--space-4);
+}
+
+.factGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border);
+}
+.factValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: var(--text-2xl);
+  color: var(--text);
+}
+.factLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: var(--space-2);
+}
+@media (max-width: 720px) {
+  .factGrid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--space-8);
+  }
+}
+@media (max-width: 420px) {
+  .factGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}
+
+/* ---- Marker (section label row) — same look as sections.module.css .marker */
+.marker {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-bottom: var(--space-4);
+}
+.markerLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.markerCaption {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  /* stack so the label and the (nowrap) caption can't collide on narrow screens */
+  .marker {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .markerCaption {
+    white-space: normal;
+  }
+}
+
+/* ---- Distribution: pinned donut + legend ---------------------------------- */
+.stage {
+  position: relative;
+  margin-top: var(--space-16);
+}
+.donutWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(84vw, 420px);
+  margin-inline: auto;
+}
+.donut {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.donut circle {
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.readoutStack {
+  position: absolute;
+  inset: 0;
+  display: none; /* only shown once JS activates the stage */
+  place-items: center;
+  text-align: center;
+  pointer-events: none;
+  padding: var(--space-8);
+}
+.readout {
+  grid-area: 1 / 1;
+}
+.readoutPct {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  line-height: 1;
+  color: var(--text);
+}
+.readoutLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: var(--space-3);
+  max-width: 20ch;
+  margin-inline: auto;
+}
+
+.legend {
+  list-style: none;
+  margin: var(--space-16) auto 0;
+  padding: 0;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  transition: opacity 0.3s var(--ease-out);
+}
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+.legendLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  flex: 1;
+}
+.legendPct {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+
+/* --- ACTIVE: pinned scrub (JS on, motion allowed) -------------------------- */
+.stage[data-mode="active"] {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding-block: var(--space-16);
+}
+.stage[data-mode="active"] .readoutStack {
+  display: grid;
+}
+.stage[data-mode="active"] .legendRow {
+  opacity: 0.55;
+}
+
+/* ---- Closing --------------------------------------------------------------- */
+.closing {
+  padding-top: 0;
+}
+.disclaimer {
+  max-width: 52ch;
+  margin-inline: auto;
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  line-height: 1.6;
+  padding-top: var(--space-8);
+}

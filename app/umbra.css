@@ -1,0 +1,180 @@
+/* =============================================================================
+   $UMBRA — Design tokens & base primitives
+   Scoped to .umbra-root so the technique showcase's global (light) theme is
+   untouched. Committed single visual world: near-black void + one ember accent.
+   Derived from the locked brand board.
+   ========================================================================== */
+
+.umbra-root {
+  /* ---- Palette: void ground -------------------------------------------- */
+  --void: #050403; /* page ground (near pitch-black, whisper-warm)      */
+  --void-2: #070605;
+  --ink: #0a0908; /* raised surface / panel                           */
+  --ink-2: #0d0c0a;
+  --line: #1a1815; /* hairline border                                  */
+  --line-2: #221f1b;
+
+  /* ---- Palette: grayscale text ramp ------------------------------------ */
+  --chalk: #eae8e4; /* primary text                                     */
+  --fog: #8f8c87; /* secondary / muted                                */
+  --fog-dim: #6f6a63; /* faint labels, page numbers (kept faint, ~3.7:1)  */
+
+  /* ---- Palette: the one accent (ember) --------------------------------- */
+  --ember: #c87740; /* primary accent — muted burnt amber             */
+  --ember-deep: #824c28; /* accent borders / CTA edge                      */
+  --corona: #f4ae6a; /* luminous corona — glow / key figures only      */
+  /* space-separated rgb for rgb(var(--x) / <alpha>) usage */
+  --ember-rgb: 200 119 64;
+  --corona-rgb: 244 174 106;
+
+  /* ---- Semantic aliases ------------------------------------------------- */
+  --bg: var(--void);
+  --surface: var(--ink);
+  --border: var(--line);
+  --text: var(--chalk);
+  --text-dim: var(--fog);
+  --text-faint: var(--fog-dim);
+  --accent: var(--ember);
+  --accent-strong: var(--corona);
+  /* translucent card surface so the cosmic background shows through */
+  --surface-glass: rgb(12 11 10 / 0.62);
+
+  /* ---- Typography ------------------------------------------------------- */
+  /* --font-umbra-display is Gap Sans (Interstices, OFL, self-hosted local font),
+     loaded by the umbra layout — a geometric humanist sans, single-story a/g. */
+  --font-display:
+    var(--font-umbra-display), "Helvetica Neue", Arial, sans-serif;
+  /* --font-sans-face (Geist Sans) is loaded on the root <html> and cascades in. */
+  --font-sans:
+    var(--font-umbra-sans), "Helvetica Neue", system-ui, Arial, sans-serif;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 0.72rem;
+  --text-sm: 0.82rem;
+  --text-base: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: clamp(1.3rem, 2vw, 1.6rem);
+  --text-2xl: clamp(1.7rem, 3vw, 2.4rem);
+  --text-3xl: clamp(2.4rem, 5vw, 3.6rem);
+  --text-hero: clamp(4rem, 9vw, 8rem);
+
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0.01em;
+  --tracking-wide: 0.18em;
+  --tracking-wider: 0.32em;
+  --tracking-widest: 0.42em;
+  --leading-tight: 1.05;
+  --leading: 1.55;
+
+  /* ---- Spacing & layout ------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --section: clamp(150px, 20vw, 300px); /* vertical rhythm between sections */
+  --gutter: clamp(16px, 4vw, 48px);
+  --maxw: 1280px;
+
+  /* ---- Radii (sharp / minimal) ----------------------------------------- */
+  --radius: 2px;
+  --radius-lg: 4px;
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* strong ease-out (Emil)  */
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1); /* sharp accents           */
+  --ease-inout: cubic-bezier(0.77, 0, 0.175, 1); /* on-screen movement      */
+  --dur-fast: 220ms;
+  --dur-base: 420ms;
+  --dur-slow: 800ms;
+  --dur-cinematic: 1200ms;
+  --dur-drift: 12s;
+
+  /* ---- Texture & glow --------------------------------------------------- */
+  --glow-pulse: 12s;
+  --glow-ember: 0 0 24px rgb(var(--ember-rgb) / 0.25);
+  --glow-corona: 0 0 32px rgb(var(--corona-rgb) / 0.3);
+
+  /* ---- Base ------------------------------------------------------------- */
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: var(--leading);
+  letter-spacing: var(--tracking-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Content sits above the fixed cosmic background (canvas at z 0). */
+.umbra-content {
+  position: relative;
+  z-index: 1;
+  /* Clip the horizontally-sliding page-transition panes. `clip` (not hidden)
+     does NOT create a scroll container, so it never breaks GSAP's fixed-mode
+     ScrollTrigger pinning inside the pages. */
+  overflow-x: clip;
+}
+
+/* Keyboard focus — a visible, on-brand ring for a11y. Shows only for keyboard
+   users (:focus-visible), never on mouse/touch. The site had no focus styling. */
+.umbra-root a:focus-visible,
+.umbra-root button:focus-visible,
+.umbra-root [tabindex]:focus-visible {
+  outline: 2px solid var(--corona);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.umbra-root :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---- Primitives ---------------------------------------------------------- */
+.umbra-root .u-container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.umbra-root .u-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--ember-deep);
+}
+
+.umbra-root .u-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.umbra-root .u-hairline {
+  height: 1px;
+  background: var(--border);
+  border: 0;
+}
+
+.umbra-root .u-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Film grain now lives INSIDE the WebGL frame (components/umbra/hero/Grain.tsx) —
+   a DOM mix-blend overlay over the animating canvas was the old ~15fps bottleneck. */
+
+/* Hide the native cursor when the custom cursor is active (JS toggles this). */
+.umbra-root.no-native-cursor,
+.umbra-root.no-native-cursor * {
+  cursor: none;
+}

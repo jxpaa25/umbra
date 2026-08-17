@@ -1,0 +1,2 @@
+Moon texture: equirectangular lunar map by Solar System Scope
+(solarsystemscope.com/textures), CC BY 4.0. Color (2048x1024) + grayscale bump.

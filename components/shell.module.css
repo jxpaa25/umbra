@@ -1,0 +1,318 @@
+/* =============================================================================
+   $UMBRA — foundation shell (preloader, cursor, nav, scroll HUD)
+   Reads tokens from the enclosing .umbra-root.
+   ========================================================================== */
+
+/* ---- Preloader ----------------------------------------------------------- */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--void);
+  display: grid;
+  place-items: center;
+  transition: transform var(--dur-cinematic) var(--ease-snap),
+    opacity var(--dur-slow) var(--ease-out);
+}
+.preloaderDone {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.preloaderInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+.preWord {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  color: var(--text);
+  text-indent: var(--tracking-widest);
+}
+.prePct {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wider);
+  color: var(--accent-strong);
+}
+
+/* ---- Custom cursor ------------------------------------------------------- */
+.cursorDot,
+.cursorRing {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 95;
+  pointer-events: none;
+  border-radius: 50%;
+  will-change: transform;
+}
+.cursorDot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--corona);
+  box-shadow: var(--glow-corona);
+}
+.cursorRing {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1px solid rgb(var(--ember-rgb) / 0.6);
+  transition: width var(--dur-fast) var(--ease-out),
+    height var(--dur-fast) var(--ease-out),
+    margin var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+.cursorActive {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-color: rgb(var(--corona-rgb) / 0.5);
+  background: rgb(var(--ember-rgb) / 0.06);
+}
+
+/* ---- Nav ----------------------------------------------------------------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--gutter);
+  padding-top: max(var(--space-6), env(safe-area-inset-top));
+  transition: transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+.navHidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.navLogo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  font-size: var(--text-sm);
+  color: var(--text);
+  text-decoration: none;
+}
+.navLinks {
+  display: flex;
+  gap: var(--space-8);
+}
+.navLinks a {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.navLinks a:hover {
+  color: var(--text);
+}
+.navCta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--ember-deep);
+  border-radius: var(--radius);
+  transition: background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform 140ms var(--ease-out);
+}
+.navCta:hover {
+  background: rgb(var(--ember-rgb) / 0.1);
+  box-shadow: var(--glow-ember);
+}
+.navCta:active {
+  transform: scale(0.97);
+}
+
+/* ---- Hamburger (≤768px) -------------------------------------------------- */
+.navBurger {
+  display: none; /* shown ≤768px via the media query below */
+  position: relative;
+  z-index: 81; /* above the overlay so it toggles closed */
+  width: 40px;
+  height: 40px;
+  margin: -8px calc(-1 * var(--space-2)) -8px 0; /* enlarge hit area, keep edge */
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+.burgerBar {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--text);
+  transition: transform var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+.burgerBarOpen1 {
+  transform: translateY(3.25px) rotate(45deg);
+}
+.burgerBarOpen2 {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+
+/* ---- Fullscreen menu overlay --------------------------------------------- */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-12);
+  padding: calc(env(safe-area-inset-top) + 96px) var(--gutter)
+    calc(env(safe-area-inset-bottom) + 48px);
+  background: rgb(5 4 3 / 0.94);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    visibility 0s linear var(--dur-base);
+}
+.menuOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out), visibility 0s;
+}
+.menuLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+.menuLink {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  font-size: clamp(1.8rem, 8vw, 3rem);
+  color: var(--text);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.menuOpen .menuLink {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--dur-base) var(--ease-out)
+      calc(120ms + var(--i) * 70ms),
+    transform var(--dur-base) var(--ease-out) calc(120ms + var(--i) * 70ms),
+    color var(--dur-fast) var(--ease-out);
+}
+.menuLink:hover {
+  color: var(--accent-strong);
+}
+.menuCta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  text-decoration: none;
+  padding: var(--space-3) var(--space-8);
+  border: 1px solid var(--ember-deep);
+  border-radius: var(--radius);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.menuOpen .menuCta {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--dur-base) var(--ease-out) 360ms,
+    transform var(--dur-base) var(--ease-out) 360ms,
+    background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.menuCta:hover {
+  background: rgb(var(--ember-rgb) / 0.1);
+  box-shadow: var(--glow-ember);
+}
+
+@media (max-width: 768px) {
+  .navLinks {
+    display: none;
+  }
+  .navBurger {
+    display: flex;
+  }
+}
+
+/* ---- Scroll HUD ---------------------------------------------------------- */
+.hud {
+  position: fixed;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  pointer-events: none;
+}
+.hudNum {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-faint);
+}
+.hudTrack {
+  width: 1px;
+  height: 72px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.hudFill {
+  position: absolute;
+  inset: 0;
+  transform-origin: top;
+  background: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .hud {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader,
+  .nav,
+  .cursorRing {
+    transition: none;
+  }
+}

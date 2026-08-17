@@ -1,0 +1,188 @@
+.hero {
+  position: relative;
+  height: 100dvh;
+  /* never taller than the viewport — a fixed 620px min overflowed short
+     landscape phones (viewport < 620) and pushed the hero off-screen */
+  min-height: min(620px, 100dvh);
+  background: transparent;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.inner {
+  padding-bottom: clamp(48px, 9vh, 120px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--ember-deep);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  line-height: 0.9;
+  font-size: var(--text-hero);
+  color: var(--text);
+  text-indent: var(--tracking-widest);
+  margin: 0;
+}
+.wordmark b {
+  font-weight: inherit;
+  color: var(--corona);
+  -webkit-text-fill-color: var(--corona);
+}
+
+.bottomRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+.sub {
+  max-width: 34ch;
+  color: var(--text-dim);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+}
+
+.buy {
+  pointer-events: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  text-decoration: none;
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--ember-deep);
+  border-radius: var(--radius);
+  background: rgb(var(--ember-rgb) / 0.05);
+  transition: background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform 140ms var(--ease-out);
+}
+.buy:hover {
+  background: rgb(var(--ember-rgb) / 0.12);
+  box-shadow: var(--glow-ember);
+}
+.buy:active {
+  transform: scale(0.97);
+}
+.buyDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--corona);
+  box-shadow: var(--glow-corona);
+}
+
+.scrollCue {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-6);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.scrollLine {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(var(--fog-dim), transparent);
+  animation: cueDrift 2.4s var(--ease-inout) infinite;
+  transform-origin: top;
+}
+@keyframes cueDrift {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* wordmark + copy reveal (after preloader) */
+.reveal {
+  animation: heroRise var(--dur-cinematic) var(--ease-out) both;
+  animation-delay: 2.3s;
+}
+.revealD1 {
+  animation-delay: 2.45s;
+}
+.revealD2 {
+  animation-delay: 2.65s;
+}
+.revealD3 {
+  animation-delay: 2.8s;
+}
+@keyframes heroRise {
+  from {
+    transform: translateY(42px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .bottomRow {
+    align-items: flex-start;
+  }
+}
+
+/* Narrow screens: the 0.42em tracking + matching text-indent pushed the last
+   glyph of the wordmark past the viewport. Ease the tracking (and drop the
+   indent) so "$UMBRA" stays on one line without overflow. */
+@media (max-width: 480px) {
+  .wordmark {
+    letter-spacing: var(--tracking-wide);
+    text-indent: 0;
+  }
+}
+@media (max-width: 360px) {
+  .wordmark {
+    letter-spacing: var(--tracking-normal);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+  .scrollLine {
+    animation: none;
+  }
+}
