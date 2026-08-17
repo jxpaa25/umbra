@@ -301,10 +301,7 @@ export default function Scene({
     current: { x: number; y: number; r: number; visible: boolean };
   };
 }) {
-  const [colorMap, bumpMap] = useTexture([
-    "/moon-color.jpg",
-    "/moon-bump.jpg",
-  ]);
+  const [colorMap, bumpMap] = useTexture(["/moon-color.jpg", "/moon-bump.jpg"]);
 
   useLayoutEffect(() => {
     colorMap.colorSpace = THREE.SRGBColorSpace;
@@ -353,6 +350,7 @@ export default function Scene({
   const moonRef = useRef<THREE.Mesh>(null);
   const travelRef = useRef<THREE.Group>(null);
   const glowRef = useRef<THREE.Group>(null);
+  const coronaMeshRef = useRef<THREE.Mesh>(null);
   const coronaMat = useRef<THREE.MeshBasicMaterial>(null);
   const rimMat = useRef<THREE.MeshBasicMaterial>(null);
   const chromoMat = useRef<THREE.MeshBasicMaterial>(null);
@@ -560,6 +558,11 @@ export default function Scene({
     }
     // gentle pulse only (no scroll-driven build) — all glow layers breathe together
     if (coronaMat.current) coronaMat.current.opacity = 0.9 + phase * 0.1;
+    // very slow axial spin of ONLY the streamer corona plane (siblings stay fixed).
+    // Parent glow group is billboarded via lookAt, so local z-rotation spins the
+    // streamer around its own camera-facing axis.
+    if (coronaMeshRef.current && !reduce)
+      coronaMeshRef.current.rotation.z = t * 0.015;
     if (rimMat.current) rimMat.current.opacity = 0.92 + phase * 0.08;
     if (chromoMat.current) chromoMat.current.opacity = 0.85 + phase * 0.15;
     if (beadMat.current) beadMat.current.opacity = 0.85 + phase * 0.15;
@@ -612,7 +615,7 @@ export default function Scene({
           DoubleSide so the camera-facing billboard renders regardless of flip. */}
       <group ref={glowRef}>
         {/* streamer corona — its own LARGER plane (CORONA_REACH) so filaments reach out */}
-        <mesh scale={CORONA_REACH}>
+        <mesh ref={coronaMeshRef} scale={CORONA_REACH}>
           <planeGeometry args={[1, 1]} />
           <meshBasicMaterial
             ref={coronaMat}
