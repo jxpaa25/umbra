@@ -49,9 +49,9 @@ export const UMBRA = {
       status: "complete",
       label: "Live now",
       milestones: [
-        { text: "Fair launch on pump.fun", done: true },
-        { text: "Liquidity burned, contract renounced", done: true },
-        { text: "First shadows gather past a thousand holders", done: true },
+        { text: "It surfaced on pump.fun, owned by no one", done: true },
+        { text: "The keys went into the fire. Nothing comes back", done: true },
+        { text: "A thousand shadows gathered, then more", done: true },
       ],
     },
     {
@@ -61,9 +61,9 @@ export const UMBRA = {
       status: "active",
       label: "In progress",
       milestones: [
-        { text: "DexScreener paid and trending", done: true },
-        { text: "Nightly lore drops and community raids", done: false },
-        { text: "Listed on the first price aggregators", done: false },
+        { text: "Its name began to spread across the charts", done: true },
+        { text: "Every night, another fragment of the story", done: false },
+        { text: "The watchers found it and could not look away", done: false },
       ],
     },
     {
@@ -73,9 +73,9 @@ export const UMBRA = {
       status: "planned",
       label: "Next",
       milestones: [
-        { text: "First centralized exchange listing", done: false },
-        { text: "The Eye opens: live holder dashboard", done: false },
-        { text: "Alliances with kindred communities", done: false },
+        { text: "The great gates turn their eyes toward it", done: false },
+        { text: "The Eye opens. Every holder is counted", done: false },
+        { text: "Other shadows swear the same dark", done: false },
       ],
     },
     {
@@ -85,9 +85,9 @@ export const UMBRA = {
       status: "planned",
       label: "On the horizon",
       milestones: [
-        { text: "Merch and an in-person eclipse gathering", done: false },
-        { text: "A creator fund for shadow art", done: false },
-        { text: "The next eclipse begins", done: false },
+        { text: "The faithful gather beneath a darkened sun", done: false },
+        { text: "The dark pays tribute to those who render it", done: false },
+        { text: "The light returns, and it begins again", done: false },
       ],
     },
   ],
